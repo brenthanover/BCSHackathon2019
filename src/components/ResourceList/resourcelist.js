@@ -6,6 +6,7 @@ import ResourceListItem from './resourcelistitem';
 import {MapsRequestHandler} from '../Maps/maps';
 import history from "../../history";
 
+import firebase from '../../Firebase';
 const styles = {
   container: {
     display: 'flex',
@@ -101,6 +102,12 @@ export default class ResourceList extends React.Component {
     this.setLocation = this.setLocation.bind(this);
     this.getLocation = this.getLocation.bind(this);
     this.formatData = this.formatData.bind(this);
+    this.handleClick = this.handleClick.bind(this);
+    this.getResources = this.getResources.bind(this);
+
+    this.db = firebase.database();
+
+    this.getResources();
   }
 
   getLocation() {
@@ -117,6 +124,27 @@ export default class ResourceList extends React.Component {
         reject("Geolocation is not supported by this browser.");
       }
     })
+      
+    
+  }
+
+  getResources() {
+    let resourceType = "Shelters";
+    this.db.ref(`/${resourceType}`).orderByKey().on("value", function (snapshot){
+      let resources = Object.values(snapshot.val());
+      let shelters = resources.map((resource) => {
+          return {
+            title: resource.name,
+            description: "This is a Shelter",
+            infoTag: {
+              type: "VACANCY",
+              label: (resource.capacity > resource.occupants) ? "VACANT" : "FULL",
+              value: `${resource.occupants}/${resource.capacity}`
+            }
+          }
+      })
+      this.setState({resources: shelters});
+    }.bind(this));
   }
 
   setLocation(position) {
