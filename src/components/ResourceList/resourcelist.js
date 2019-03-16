@@ -36,27 +36,23 @@ const RADIUS_OF_EARTH = 6371000;   // radius of earth in metres
 
 const MOCK_INFOTAG = { type: 'VACANCY', label: 'VACANT', value: '132/200' };
 
-const MOCK_ITEM = {
-  name: "Shoppers Drug Mart",
-  icon: "https://maps.gstatic.com/mapfiles/place_api/icons/shopping-71.png",
-  formatted_address: "Dentistry Bldg, 5940 University Blvd, Vancouver, BC V6T 1Z3, Canada",
-  opening_hours: {
-    open_now: true
-  },
-  types: [
-    "pharmacy",
-    "store",
-    "health",
-    "point_of_interest",
-    "establishment"
-  ],
-  infoTag: MOCK_INFOTAG
-};
 const MOCK_ITEMS = [
-  MOCK_ITEM,
-  MOCK_ITEM,
-  MOCK_ITEM,
-  MOCK_ITEM
+  {
+    name: "Shoppers Drug Mart",
+    icon: "https://maps.gstatic.com/mapfiles/place_api/icons/shopping-71.png",
+    formatted_address: "Dentistry Bldg, 5940 University Blvd, Vancouver, BC V6T 1Z3, Canada",
+    opening_hours: {
+      open_now: true
+    },
+    types: [
+      "pharmacy",
+      "store",
+      "health",
+      "point_of_interest",
+      "establishment"
+    ],
+    infoTag: MOCK_INFOTAG
+  }
 ];
 
 const MOCK_DATA = [
@@ -88,6 +84,7 @@ export default class ResourceList extends React.Component {
     this.queryNearbyResources = this.queryNearbyResources.bind(this);
     this.setLocation = this.setLocation.bind(this);
     this.getLocation = this.getLocation.bind(this);
+    this.formatData = this.formatData.bind(this);
   }
 
   getLocation() {
@@ -116,8 +113,12 @@ export default class ResourceList extends React.Component {
     // TODO: here, we should call handleGetPlacesQuery() with a proper lat, lng, and request type.
     let queryResponse = await MapsRequestHandler.handleGetPlacesQuery(this.state.lat, this.state.lon, requestTypes.SAFE_INJECTION_SITE);
     console.log('resources are ', queryResponse);
-    this.setState({ data: queryResponse.data.results });
+    this.setState({ data: this.formatData(queryResponse.data.results) });
     return queryResponse;
+  }
+
+  formatData(data) {
+    return data;
   }
 
   /**
