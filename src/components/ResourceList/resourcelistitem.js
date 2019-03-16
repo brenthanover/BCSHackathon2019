@@ -104,6 +104,22 @@ export default class ResourceListItem extends React.Component {
     this.handleExpand = this.handleExpand.bind(this);
   }
 
+  /**
+   * Formats data from queryNearbyResources() to a more flattened structure
+   * ASSUME: data is from a successful response
+   * @param data
+   * @returns {*}
+   */
+  formatData(data) {
+    let resultObj = {
+      isExpanded: true,
+      phone: data.result.formatted_phone_number,
+      schedule: data.result.opening_hours.weekday_text,
+      website: data.result.website
+    };
+    return resultObj
+  }
+
   handleExpand(isExpanded) {
     // TODO: add api call for details here and set state
     this.setState({ isExpanded: !isExpanded });

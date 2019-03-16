@@ -111,14 +111,34 @@ export default class ResourceList extends React.Component {
 
   async queryNearbyResources() {
     // TODO: here, we should call handleGetPlacesQuery() with a proper lat, lng, and request type.
-    let queryResponse = await MapsRequestHandler.handleGetPlacesQuery(this.state.lat, this.state.lon, requestTypes.SAFE_INJECTION_SITE);
+    let queryResponse = await MapsRequestHandler.handleGetPlacesQuery(this.state.lat, this.state.lon);
     console.log('resources are ', queryResponse);
-    this.setState({ data: this.formatData(queryResponse.data.results) });
-    return queryResponse;
+    this.setState({ data: this.formatData(JSON.parse(queryResponse).data.results) });
+    return this.formatData(JSON.parse(queryResponse).data);
   }
 
+  /**
+   * Formats data from queryNearbyResources() to a more flattened structure
+   * ASSUME: data is from a successful response
+   * @param data
+   * @returns {*}
+   */
   formatData(data) {
-    return data;
+    let ret = [];
+    for (let i = 0; i < data.results.length; ++i) {
+      let result = data.results[i];
+      let resultObj = {
+        name: result.name,
+        icon: result.icon,
+        formatted_address: result.formatted_address,
+        opening_hours: result.opening_hours,
+        types: result.types,
+        place_id: result.place_id,
+        infoTag: MOCK_INFOTAG
+      };
+      ret.push(resultObj);
+    }
+    return ret;
   }
 
   /**
