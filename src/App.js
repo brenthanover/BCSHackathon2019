@@ -4,6 +4,7 @@ import history from './history';
 
 import Home from './home/home';
 import Admin from './admin/admin';
+import Maps from './components/Maps/maps';
 
 const styles = {
   container: {
@@ -20,6 +21,7 @@ class App extends Component {
           <Route exact path={"/"} component={Home}/>
           <Route exact path={"/admin"} component={Admin}/>
         </Router>
+        <Maps />
       </div>
     );
   }
