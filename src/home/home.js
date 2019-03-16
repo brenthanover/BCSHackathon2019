@@ -1,3 +1,4 @@
+import './home.css';
 import React from 'react';
 import { NavBar, ResourceList } from '../components';
 

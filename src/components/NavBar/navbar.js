@@ -1,12 +1,28 @@
+import './navbar.css';
 import React from 'react';
 import history from '../../history';
+import Home from '../../assets/home.svg';
 
 const styles = {
   container: {
     display: 'flex',
     width: '100%',
-    height: '3rem',
-    border: '1px solid blue'
+    height: 'min-content',
+    backgroundColor: '#428ec1',
+    padding: '0.5rem',
+    fill: '#FFF'
+  },
+  title: {
+    color: '#FFFFFF'
+  },
+  logo: {
+    marginRight: '1rem',
+    height: '1.5rem',
+    color: '#FFFFFF',
+    fill: '#FFF',
+    path: {
+      fill: '#FFF'
+    }
   }
 };
 
@@ -28,7 +44,8 @@ export default class Navbar extends React.Component {
   render() {
     return (
       <div style={styles.container}>
-        <h1>Haven App</h1>
+        <img style={styles.logo} src={Home} alt="logo" className="home-logo" />
+        <h1 style={styles.title}>Haven App</h1>
         <button onClick={() => history.push('/')}>main</button>
         <button onClick={() => history.push('/admin')}>admin</button>
       </div>
