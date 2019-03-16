@@ -8,15 +8,19 @@ const requestTypes = {
 };
 
 let HttpClient = function() {
-  this.get = function(aUrl, aCallback) {
+  this.post = function(aUrl, queryPath, aCallback) {
     let anHttpRequest = new XMLHttpRequest();
     anHttpRequest.onreadystatechange = function() {
-      if (anHttpRequest.readyState == 4 && anHttpRequest.status == 200)
+      if (anHttpRequest.readyState == 4 && anHttpRequest.status == 200){
         aCallback(anHttpRequest.responseText);
+      }
     };
 
-    anHttpRequest.open( "GET", aUrl, true );
-    anHttpRequest.send( null );
+    let data = {queryPath: queryPath};
+
+    anHttpRequest.open( "POST", aUrl, false );
+    anHttpRequest.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    anHttpRequest.send( JSON.stringify(data));
   }
 };
 
@@ -29,19 +33,34 @@ export default class Maps extends React.Component {
     };
 
     this.handleClick = this.handleClick.bind(this);
+    this.handleIndividualPlaceClick = this.handleIndividualPlaceClick.bind(this);
   }
 
   async handleClick(text) {
     this.setState({ text: text });
-    let queryResponse = await MapsRequestHandler.handleQuery(49.267940, -123.247360, requestTypes.HOSPITAL);
+
+    // TODO: here, we should call handleGetPlacesQuery() with a proper lat, lng, and request type.
+    let queryResponse = await MapsRequestHandler.handleGetPlacesQuery(49.267940, -123.247360, requestTypes.SAFE_INJECTION_SITE);
     console.log("Response: " + queryResponse);
+
+    // This is the response containing the data you want for rendering on the front-end.
+    return queryResponse;
+  }
+
+  async handleIndividualPlaceClick(placeId) {
+    
+    // TODO: here, we should call handleGetPlaceDetails() with a proper placeId from our getPlacesQuery.
+    let queryResponse = await MapsRequestHandler.handleGetPlaceDetails(placeId);
+    console.log("Response: " + queryResponse);
+    return queryResponse;
   }
 
   render() {
     return (
       <div>
         <h1>Maps Page</h1>
-        <button onClick={() => this.handleClick('You clicked the button!')}>Click me!</button>
+        <button onClick={() => this.handleClick('You clicked the button!')}>Get list of nearby places</button>
+        <button onClick={() => this.handleIndividualPlaceClick("ChIJv1Ta5shyhlQR_6flUsZ9Vok")}>Get detailed info for one place</button>
         <p>Text: {this.state.text}</p>
       </div>
     )
@@ -60,30 +79,65 @@ export class MapsRequestHandler {
    * @param requestType
    * @returns {Promise<void>}
    */
-  static async handleQuery(lat, lng, requestType) {
-    let queryPath = this.buildQuery(lat, lng, requestType);
+  static async handleGetPlacesQuery(lat, lng, requestType) {
+    let queryPath = this.buildGetPlacesQuery(lat, lng, requestType);
     console.log(queryPath);
 
     let httpClient = new HttpClient();
+    this.response = null;
+    let _this = this;
 
-    httpClient.get("http://localhost:8080/placesRequest", function(request, response) {
+    await httpClient.post("http://localhost:8080/placesRequest", queryPath, function(response) {
       // I could work with the result html/json here.  I could also just return it
-      console.log("Returning result handleQuery()");
-      console.log(response);
-      return response;
+      console.log("Returning result handleGetPlacesQuery()");
+      _this.response = response;
     });
+
+    return _this.response;
   }
 
   /**
-   *  Returns the URL required for a query.
+   *  Returns the URL required for a "get places" query.
    */
-  static buildQuery(lat, lng, requestType) {
-    return "https://maps.googleapis.com/maps/api/place/findplacefromtext/json"
-        + "?input=" + requestType
+  static buildGetPlacesQuery(lat, lng, requestType) {
+    return "https://maps.googleapis.com/maps/api/place/nearbysearch/json"
+        + "?keyword=" + requestType
         + "&inputtype=textquery"
         + "&language=en"
-        + "&fields=formatted_address,geometry,icon,id,name,permanently_closed,photos,place_id,plus_code,types,user_ratings_total,price_level,rating"
-        + "&locationbias=point:" + lat.toString() + "," + lng.toString()
-        + "&key=" + MapsApiKey.MAPS_API_KEY;
+        + "&fields=formatted_address,geometry,icon,id,name,permanently_closed,photos,place_id,plus_code,types,user_ratings_total,price_level,rating,opening_hours"
+        + "&location=" + lat.toString() + "," + lng.toString()
+        + "&key=" + MapsApiKey.MAPS_API_KEY
+        + "&radius=12000";
+  }
+
+  static async handleGetPlaceDetails(placeId) {
+    let queryPath = this.buildGetPlaceDetailsQuery(placeId);
+
+    console.log(queryPath);
+
+    let httpClient = new HttpClient();
+    this.response = null;
+    let _this = this;
+
+    await httpClient.post("http://localhost:8080/placeDetailsRequest", queryPath, function(response) {
+      // I could work with the result html/json here.  I could also just return it
+      console.log("Returning result handleGetPlaceDetails()");
+      _this.response = response;
+    });
+
+    return _this.response;
+  }
+
+  /**
+   * Given a placeid (retrieved from a separate "get places" query), return contact information for that one place.
+   * @param placeid
+   * @returns {string}
+   */
+  static buildGetPlaceDetailsQuery(placeid) {
+    return "https://maps.googleapis.com/maps/api/place/details/json"
+        + "?key=" + MapsApiKey.MAPS_API_KEY
+        + "&placeid=" + placeid
+        + "&language=en"
+        + "&fields=formatted_phone_number,international_phone_number,opening_hours,website"
   }
 }
