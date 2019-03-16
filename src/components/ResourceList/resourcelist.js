@@ -85,6 +85,7 @@ export default class ResourceList extends React.Component {
 
     this.queryNearbyResources = this.queryNearbyResources.bind(this);
     this.setLocation = this.setLocation.bind(this);
+    this.getLocation = this.getLocation.bind(this);
   }
 
   getLocation() {
@@ -93,9 +94,11 @@ export default class ResourceList extends React.Component {
         navigator.geolocation.getCurrentPosition((position) => {
           resolve(position);
         }, () => {
+          console.log('error1');
           reject("Geolocation is not supported by this browser.");
         });
       } else {
+        console.log('error2');
         reject("Geolocation is not supported by this browser.");
       }
     })
@@ -112,11 +115,14 @@ export default class ResourceList extends React.Component {
     let queryResponse = await MapsRequestHandler.handleGetPlacesQuery(this.state.lat, this.state.lon, requestTypes.SAFE_INJECTION_SITE);
     console.log('resources are ', queryResponse);
     this.setState({ data: queryResponse });
+    return queryResponse;
   }
 
   componentDidMount() {
+    console.log('mounted');
     this.getLocation()
-      .then(this.setLocation);
+      .then(this.setLocation)
+      .then(this.queryNearbyResources);
   }
 
   render() {
