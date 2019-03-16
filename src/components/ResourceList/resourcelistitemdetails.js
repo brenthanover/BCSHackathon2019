@@ -3,6 +3,7 @@ import React from 'react';
 const styles = {
   container: {
     display: 'flex',
+    flex: 'none',
     height: 'min-content',
     width: '100%',
     backgroundColor: '#FFFFFF',
@@ -32,11 +33,19 @@ export default class ResourceListItemDetails extends React.Component {
   }
 
   render() {
+    const {
+      phone,
+      website,
+      schedule
+    } = this.props;
+
     return (
       <div style={styles.container}>
         <div style={styles.innerContainer}>
           <h1>Resource Details/ schedule</h1>
-          <p>Details text, schedule etc...</p>
+          <p>{phone}</p>
+          <p>{website}</p>
+          <p>{schedule}</p>
 
           <div style={styles.optionsBar}>
             <button onClick={() => this.handleClick('You clicked the button!')}>Admin Panel!</button>

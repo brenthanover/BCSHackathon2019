@@ -10,8 +10,10 @@ const styles = {
   container: (isOdd, isExpanded) => ({
     display: 'flex',
     flexFlow: 'column',
+    flex: 'none',
     width: '100%',
-    height: isExpanded ? '16rem' : '8rem',
+    // height: ''
+    minHeight: isExpanded ? '20rem' : 'auto',
     backgroundColor: isOdd ? LIST_BLUE : LIST_WHITE,
     transition: 'all 0.05s ease-in-out'
   }),
@@ -23,8 +25,9 @@ const styles = {
 
   innerContainer: {
     display: 'flex',
+    flex: 'none',
     width: '100%',
-    height: '100%',
+    height: 'min-content',
   },
 
   // Body Styles
@@ -101,16 +104,19 @@ export default class ResourceListItem extends React.Component {
       website: "http://pharmsci.ubc.ca/pharmacists-clinic"
     };
 
+    this.formatData = this.formatData.bind(this);
     this.getLabel = this.getLabel.bind(this);
     this.handleExpand = this.handleExpand.bind(this);
     this.handleIndividualPlaceClick = this.handleIndividualPlaceClick.bind(this);
   }
 
-  async handleIndividualPlaceClick() {
+  async handleIndividualPlaceClick(isExpanded) {
     // TODO: here, we should call handleGetPlaceDetails() with a proper placeId from our getPlacesQuery.
     const { place_id } = this.props;
     let queryResponse = await MapsRequestHandler.handleGetPlaceDetails(place_id);
     console.log("Response: " + queryResponse);
+    this.setState({ data: this.formatData(JSON.parse(queryResponse).data) });
+    this.setState({ isExpanded: !isExpanded });
     return queryResponse;
   }
 
@@ -121,10 +127,11 @@ export default class ResourceListItem extends React.Component {
    * @returns {*}
    */
   formatData(data) {
+    console.log('data is ', data);
     let resultObj = {
       isExpanded: true,
       phone: data.result.formatted_phone_number,
-      schedule: data.result.opening_hours.weekday_text,
+      schedule: data.result.opening_hours ? data.result.opening_hours.weekday_text : 'Hours unavailable',
       website: data.result.website
     };
     return resultObj
@@ -132,9 +139,9 @@ export default class ResourceListItem extends React.Component {
 
   handleExpand(isExpanded) {
     // TODO: add api call for details here and set state
-    this.handleIndividualPlaceClick()
-      .then(() => this.setState({ isExpanded: !isExpanded }))
-      .catch(() => this.state({ isExpanded: false }));
+    this.handleIndividualPlaceClick(isExpanded);
+      // .then(() => this.setState({ isExpanded: !isExpanded }))
+      // .catch(() => this.setState({ isExpanded: false }));
   }
 
   getLabel() {
@@ -174,7 +181,11 @@ export default class ResourceListItem extends React.Component {
           </div>
         </div>
 
-        {this.state.isExpanded && <ResourceListItemDetails index={index} />}
+        {this.state.isExpanded && <ResourceListItemDetails
+          schedule={this.state.schedule}
+          phone={this.state.phone}
+          website={this.state.website}
+          index={index} />}
       </div>
     )
   }

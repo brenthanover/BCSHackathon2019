@@ -24,6 +24,8 @@ const styles = {
   }
 };
 
+const MAX_ITEMS = 6;
+
 const requestTypes = {
   SHELTER: "shelter",
   SAFE_INJECTION_SITE: "safe%20injection%20site",
@@ -97,7 +99,7 @@ export default class ResourceList extends React.Component {
     // TODO: here, we should call handleGetPlacesQuery() with a proper lat, lng, and request type.
     let queryResponse = await MapsRequestHandler.handleGetPlacesQuery(this.state.lat, this.state.lon);
     console.log('resources are ', queryResponse);
-    this.setState({ data: this.formatData(JSON.parse(queryResponse).data.results) });
+    this.setState({ data: this.formatData(JSON.parse(queryResponse).data) });
     return this.formatData(JSON.parse(queryResponse).data);
   }
 
@@ -160,7 +162,7 @@ export default class ResourceList extends React.Component {
       <div style={styles.container}>
         <div style={styles.scrollContainer}>
           <List celled>
-            {MOCK_ITEMS.map((item, id) => (
+            {this.state.data.slice(0, MAX_ITEMS).map((item, id) => (
               <List.Item key={id} style={styles.listItem}>
                 <List.Content>
                   <ResourceListItem
@@ -170,6 +172,7 @@ export default class ResourceList extends React.Component {
                     address={item.formatted_address}
                     openingHours={item.opening_hours}
                     types={item.types}
+                    place_id={item.place_id}
                     infoTag={item.infoTag}
                   />
                 </List.Content>

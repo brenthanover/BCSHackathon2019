@@ -17,7 +17,7 @@ app.get('/ping', function (req, res) {
   return res.send('pong');
 });
 app.post('/placesRequest', function (req, res) {
-  console.log("You are in the placesRequest route");
+  console.log("You are in the placesRequest route", port);
   console.log(req.body.queryPath);
 
   let apiUrl = req.body.queryPath;
