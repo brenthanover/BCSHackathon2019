@@ -55,22 +55,6 @@ const MOCK_ITEMS = [
   }
 ];
 
-const MOCK_DATA = [
-  { title: 'TEST1', description: 'test1', infoTag: MOCK_INFOTAG },
-  { title: 'TEST2', description: 'test2', infoTag: MOCK_INFOTAG },
-  { title: 'TEST3', description: 'test3', infoTag: MOCK_INFOTAG },
-  { title: 'TEST1', description: 'test1', infoTag: MOCK_INFOTAG },
-  { title: 'TEST2', description: 'test2', infoTag: MOCK_INFOTAG },
-  { title: 'TEST3', description: 'test3', infoTag: MOCK_INFOTAG },
-  { title: 'TEST1', description: 'test1', infoTag: MOCK_INFOTAG },
-  { title: 'TEST2', description: 'test2', infoTag: MOCK_INFOTAG },
-  { title: 'TEST3', description: 'test3', infoTag: MOCK_INFOTAG },
-  { title: 'TEST1', description: 'test1', infoTag: MOCK_INFOTAG },
-  { title: 'TEST2', description: 'test2', infoTag: MOCK_INFOTAG },
-  { title: 'TEST3', description: 'test3', infoTag: MOCK_INFOTAG },
-];
-
-
 export default class ResourceList extends React.Component {
   constructor(props) {
     super(props);
