@@ -1,4 +1,5 @@
 import React from 'react';
+import history from '../../history';
 
 const styles = {
   container: {
@@ -28,7 +29,8 @@ export default class Navbar extends React.Component {
     return (
       <div style={styles.container}>
         <h1>Haven App</h1>
-        <button onClick={() => this.handleClick('You clicked the button!')}>Admin Panel!</button>
+        <button onClick={() => history.push('/')}>main</button>
+        <button onClick={() => history.push('/admin')}>admin</button>
       </div>
     )
   }

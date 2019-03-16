@@ -1,5 +1,9 @@
 import React, { Component } from 'react';
-import { GPS, NFC, Maps, NavBar, ResourceList } from './components';
+import { Router, Switch, Route } from 'react-router-dom';
+import history from './history';
+
+import Home from './home/home';
+import Admin from './admin/admin';
 
 const styles = {
   container: {
@@ -12,11 +16,10 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <NavBar />
-        <ResourceList />
-        {/*<GPS />*/}
-        {/*<NFC />*/}
-        {/*<Maps />*/}
+        <Router history={history}>
+          <Route exact path={"/"} component={Home}/>
+          <Route exact path={"/admin"} component={Admin}/>
+        </Router>
       </div>
     );
   }
