@@ -114,7 +114,7 @@ export default class ResourceList extends React.Component {
     // TODO: here, we should call handleGetPlacesQuery() with a proper lat, lng, and request type.
     let queryResponse = await MapsRequestHandler.handleGetPlacesQuery(this.state.lat, this.state.lon, requestTypes.SAFE_INJECTION_SITE);
     console.log('resources are ', queryResponse);
-    this.setState({ data: queryResponse });
+    this.setState({ data: queryResponse.data.results });
     return queryResponse;
   }
 

@@ -84,7 +84,7 @@ export class MapsRequestHandler {
    */
   static async handleGetPlacesQuery(lat, lng, requestType) {
     let queryPath = this.buildGetPlacesQuery(lat, lng, requestType);
-    console.log(queryPath);
+    console.log(queryPath, lat, lng);
 
     let httpClient = new HttpClient();
     this.response = null;
