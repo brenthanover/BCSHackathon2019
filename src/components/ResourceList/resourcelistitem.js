@@ -1,6 +1,7 @@
 import React from 'react';
 import ResourceListItemDetails from './resourcelistitemdetails';
 import Chip from './chip';
+import {MapsRequestHandler} from '../Maps/maps';
 
 const LIST_BLUE = '#eceef9';
 const LIST_WHITE = '#FFFFFF';
@@ -102,6 +103,15 @@ export default class ResourceListItem extends React.Component {
 
     this.getLabel = this.getLabel.bind(this);
     this.handleExpand = this.handleExpand.bind(this);
+    this.handleIndividualPlaceClick = this.handleIndividualPlaceClick.bind(this);
+  }
+
+  async handleIndividualPlaceClick() {
+    // TODO: here, we should call handleGetPlaceDetails() with a proper placeId from our getPlacesQuery.
+    const { place_id } = this.props;
+    let queryResponse = await MapsRequestHandler.handleGetPlaceDetails(place_id);
+    console.log("Response: " + queryResponse);
+    return queryResponse;
   }
 
   /**
@@ -122,7 +132,9 @@ export default class ResourceListItem extends React.Component {
 
   handleExpand(isExpanded) {
     // TODO: add api call for details here and set state
-    this.setState({ isExpanded: !isExpanded });
+    this.handleIndividualPlaceClick()
+      .then(() => this.setState({ isExpanded: !isExpanded }))
+      .catch(() => this.state({ isExpanded: false }));
   }
 
   getLabel() {
