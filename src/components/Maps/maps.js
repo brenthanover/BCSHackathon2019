@@ -1,5 +1,8 @@
 import React from 'react';
 
+// const ROOT_URL = "http://localhost:8080";
+const ROOT_URL = "";
+
 const requestTypes = {
   SHELTER: "shelter",
   SAFE_INJECTION_SITE: "safe%20injection%20site",
@@ -48,7 +51,7 @@ export default class Maps extends React.Component {
   }
 
   async handleIndividualPlaceClick(placeId) {
-    
+
     // TODO: here, we should call handleGetPlaceDetails() with a proper placeId from our getPlacesQuery.
     let queryResponse = await MapsRequestHandler.handleGetPlaceDetails(placeId);
     console.log("Response: " + queryResponse);
@@ -87,7 +90,7 @@ export class MapsRequestHandler {
     this.response = null;
     let _this = this;
 
-    await httpClient.post("http://localhost:8080/placesRequest", queryPath, function(response) {
+    await httpClient.post(`${ROOT_URL}/placesRequest`, queryPath, function(response) {
       // I could work with the result html/json here.  I could also just return it
       console.log("Returning result handleGetPlacesQuery()");
       _this.response = response;
@@ -119,7 +122,7 @@ export class MapsRequestHandler {
     this.response = null;
     let _this = this;
 
-    await httpClient.post("http://localhost:8080/placeDetailsRequest", queryPath, function(response) {
+    await httpClient.post(`${ROOT_URL}/placeDetailsRequest`, queryPath, function(response) {
       // I could work with the result html/json here.  I could also just return it
       console.log("Returning result handleGetPlaceDetails()");
       _this.response = response;

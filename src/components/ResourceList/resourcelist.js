@@ -2,6 +2,7 @@ import './resourcelist.css';
 import React from 'react';
 import { List } from 'semantic-ui-react';
 import ResourceListItem from './resourcelistitem';
+import {MapsRequestHandler} from '../Maps/maps';
 
 const styles = {
   container: {
@@ -22,6 +23,14 @@ const styles = {
     // borderBottom: '1px solid #c1c1c1'
   }
 };
+
+const requestTypes = {
+  SHELTER: "shelter",
+  SAFE_INJECTION_SITE: "safe%20injection%20site",
+  PHARMACY: "pharmacy",
+  HOSPITAL: "hospital"
+};
+
 
 const MOCK_INFOTAG = { type: 'VACANCY', label: 'VACANT', value: '132/200' };
 
@@ -69,18 +78,45 @@ export default class ResourceList extends React.Component {
     super(props);
 
     this.state = {
-      text: 'Go click the button!'
+      lat: 49.267940,
+      lon: -123.247360,
+      data: []
     };
 
-    this.handleClick = this.handleClick.bind(this);
+    this.queryNearbyResources = this.queryNearbyResources.bind(this);
+    this.setLocation = this.setLocation.bind(this);
+  }
+
+  getLocation() {
+    return new Promise((resolve, reject) => {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition((position) => {
+          resolve(position);
+        }, () => {
+          reject("Geolocation is not supported by this browser.");
+        });
+      } else {
+        reject("Geolocation is not supported by this browser.");
+      }
+    })
+  }
+
+  setLocation(position) {
+    let lat = position.coords.latitude;
+    let lon = position.coords.longitude;
+    this.setState({ lat, lon });
+  }
+
+  async queryNearbyResources() {
+    // TODO: here, we should call handleGetPlacesQuery() with a proper lat, lng, and request type.
+    let queryResponse = await MapsRequestHandler.handleGetPlacesQuery(this.state.lat, this.state.lon, requestTypes.SAFE_INJECTION_SITE);
+    console.log('resources are ', queryResponse);
+    this.setState({ data: queryResponse });
   }
 
   componentDidMount() {
-    // TODO: add API call to load list data
-  }
-
-  handleClick(text) {
-    this.setState({ text: text });
+    this.getLocation()
+      .then(this.setLocation);
   }
 
   render() {
