@@ -31,6 +31,21 @@ app.post('/placesRequest', function (req, res) {
         res.redirect('/error');
       });
 });
+app.post('/placeDetailsRequest', function (req, res) {
+  console.log("You are in the placeDetailsRequest route");
+  console.log(req.body.queryPath);
+
+  let apiUrl = req.body.queryPath;
+
+  fetch(apiUrl)
+      .then(res => res.json())
+      .then(data => {
+        res.send({ data });
+      })
+      .catch(err => {
+        res.redirect('/error');
+      });
+});
 app.get('/*', function (req, res) {
   res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
