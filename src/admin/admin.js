@@ -1,5 +1,6 @@
 import React from 'react';
 import Navbar from '../components/NavBar/navbar';
+
 const firebase = require('firebase/app');
 require('firebase/database');
 const styles = {
@@ -15,6 +16,12 @@ export default class Admin extends React.Component {
     constructor(props) {
         super(props);
 
+        this.state = {
+            name: "asdf",
+            numOfOccupants: 0,
+            capacity: 20
+        }
+
         this.handleClick = this.handleClick.bind(this);
 
         const config = {
@@ -28,24 +35,53 @@ export default class Admin extends React.Component {
         firebase.initializeApp(config);
         this.firebase = firebase;
         this.db = firebase.database();
+        this.setName();
+    }
+
+    setName() {
+        this.firebase.database().ref(`/Shelters/Shelter1`).once('value').then((res) => {
+            let name = res.val().name;
+            this.setState({name});
+        });
+    }
+
+    incCount() {
+        let numOfOccupants = this.state.numOfOccupants;
+        if (this.state.numOfOccupants >= this.state.capacity) {
+            // No!!!
+        } else {
+            numOfOccupants++;
+            this.setState({numOfOccupants: numOfOccupants});
+            this.db.ref('Shelters/Shelter1').update({occupants: numOfOccupants})
+                .then(() => {
+                    console.log("Success!");
+                });
+        }
+    }
+
+    decCount() {
+        let numOfOccupants = this.state.numOfOccupants;
+        if (this.state.numOfOccupants = 0) {
+            // No!!!
+        } else {
+            numOfOccupants--;
+            this.setState({numOfOccupants: numOfOccupants});
+            this.db.ref('Shelters/Shelter1').update({occupants: numOfOccupants})
+                .then(() => {
+                    console.log("Success!");
+                });
+        }
     }
 
     handleClick(text) {
         this.setState({text: text});
 
-        // firebase.database().ref('Shelters/Shelter2').set({
-        //     username: "name",
-        //     email: "email",
-        //     profile_picture : "imageUrl"
-        // });
-
         this.firebase.database().ref('/Shelters/Shelter1').once('value').then((res) => {
-            console.log('Shelter name:', res.name);
-            console.log('Shelter location:', res.location);
-            console.log('Shelter capacity:', res.capacity);
-            console.log('Current number of occupants:', res.occupants);
+            console.log('Shelter name:', res.val().name);
+            console.log('Shelter location:', res.val().location);
+            console.log('Shelter capacity:', res.val().numOfOccupants);
+            console.log('Current number of occupants:', res.val().numOfOccupants);
         });
-
     }
 
     render() {
@@ -53,7 +89,10 @@ export default class Admin extends React.Component {
             <div style={styles.container}>
                 <Navbar/>
                 <h1>Admin Page</h1>
-                <button onClick={() => this.handleClick()}>Click me!</button>
+                <p>Current Shelter: {this.state.name}</p>
+                <p>Current number of Occupants: {this.state.numOfOccupants}</p>
+                <button onClick={() => this.incCount()}>Inc Count</button>
+                <button onClick={() => this.decCount()}>Dec Count</button>
             </div>
         )
     }
