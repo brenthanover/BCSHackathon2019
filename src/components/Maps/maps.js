@@ -8,17 +8,20 @@ const requestTypes = {
 };
 
 let HttpClient = function() {
-  this.get = function(aUrl, aCallback) {
+  this.post = function(aUrl, queryPath, aCallback) {
     let anHttpRequest = new XMLHttpRequest();
     anHttpRequest.onreadystatechange = function() {
       if (anHttpRequest.readyState == 4 && anHttpRequest.status == 200){
-        console.log("In this.get(): " + anHttpRequest.responseText);
+        console.log("In this.post(): " + anHttpRequest.responseText);
         aCallback(anHttpRequest.responseText);
       }
     };
 
-    anHttpRequest.open( "GET", aUrl, false );
-    anHttpRequest.send( null );
+    let data = {queryPath: queryPath};
+
+    anHttpRequest.open( "POST", aUrl, false );
+    anHttpRequest.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    anHttpRequest.send( JSON.stringify(data));
   }
 };
 
@@ -35,7 +38,9 @@ export default class Maps extends React.Component {
 
   async handleClick(text) {
     this.setState({ text: text });
-    let queryResponse = await MapsRequestHandler.handleQuery(49.267940, -123.247360, requestTypes.HOSPITAL);
+
+    // TODO: here, we should call handleQuery() with a proper lat, lng, and request type.
+    let queryResponse = await MapsRequestHandler.handleQuery(49.267940, -123.247360, requestTypes.PHARMACY);
     console.log("Response: " + queryResponse);
 
     // This is the response containing the data you want for rendering on the front-end.
@@ -73,7 +78,7 @@ export class MapsRequestHandler {
     this.response = null;
     let _this = this;
 
-    await httpClient.get("http://localhost:8080/placesRequest", function(response) {
+    await httpClient.post("http://localhost:8080/placesRequest", queryPath, function(response) {
       // I could work with the result html/json here.  I could also just return it
       console.log("Returning result handleQuery()");
       _this.response = response;
@@ -86,12 +91,13 @@ export class MapsRequestHandler {
    *  Returns the URL required for a query.
    */
   static buildQuery(lat, lng, requestType) {
-    return "https://maps.googleapis.com/maps/api/place/findplacefromtext/json"
-        + "?input=" + requestType
+    return "https://maps.googleapis.com/maps/api/place/nearbysearch/json"
+        + "?keyword=" + requestType
         + "&inputtype=textquery"
         + "&language=en"
-        + "&fields=formatted_address,geometry,icon,id,name,permanently_closed,photos,place_id,plus_code,types,user_ratings_total,price_level,rating"
-        + "&locationbias=point:" + lat.toString() + "," + lng.toString()
-        + "&key=" + MapsApiKey.MAPS_API_KEY;
+        + "&fields=formatted_address,geometry,icon,id,name,permanently_closed,photos,place_id,plus_code,types,user_ratings_total,price_level,rating,opening_hours"
+        + "&location=" + lat.toString() + "," + lng.toString()
+        + "&key=" + MapsApiKey.MAPS_API_KEY
+        + "&radius=2000";
   }
 }

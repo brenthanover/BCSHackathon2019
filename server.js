@@ -4,6 +4,11 @@ const port = process.env.PORT || 8080;
 const app = express();
 var cors = require('cors');
 require('isomorphic-fetch');
+var bodyParser = require('body-parser');
+app.use(bodyParser.json()); // for parsing application/json
+app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
+  extended: true
+}));
 // the __dirname is the current directory from where the script is running
 app.use(express.static(__dirname));
 app.use(express.static(path.join(__dirname, 'build')));
@@ -11,20 +16,11 @@ app.use(cors());
 app.get('/ping', function (req, res) {
   return res.send('pong');
 });
-app.get('/placesRequest', function (req, res) {
+app.post('/placesRequest', function (req, res) {
   console.log("You are in the placesRequest route");
+  console.log(req.body.queryPath);
 
-  const buildQuery = (lat, lng, requestType) => {
-    return "https://maps.googleapis.com/maps/api/place/findplacefromtext/json"
-        + "?input=" + requestType
-        + "&inputtype=textquery"
-        + "&language=en"
-        + "&fields=formatted_address,geometry,icon,id,name,permanently_closed,photos,place_id,plus_code,types,user_ratings_total,price_level,rating"
-        + "&locationbias=point:" + lat.toString() + "," + lng.toString()
-        + "&key=AIzaSyAsvCrLqQVzefCIIPgvWoVsx_PBpYi8l2c";
-  };
-
-  const apiUrl = buildQuery(49.267940, -123.247360, "hospital");
+  let apiUrl = req.body.queryPath;
 
   fetch(apiUrl)
       .then(res => res.json())
