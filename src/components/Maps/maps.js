@@ -11,11 +11,13 @@ let HttpClient = function() {
   this.get = function(aUrl, aCallback) {
     let anHttpRequest = new XMLHttpRequest();
     anHttpRequest.onreadystatechange = function() {
-      if (anHttpRequest.readyState == 4 && anHttpRequest.status == 200)
+      if (anHttpRequest.readyState == 4 && anHttpRequest.status == 200){
+        console.log("In this.get(): " + anHttpRequest.responseText);
         aCallback(anHttpRequest.responseText);
+      }
     };
 
-    anHttpRequest.open( "GET", aUrl, true );
+    anHttpRequest.open( "GET", aUrl, false );
     anHttpRequest.send( null );
   }
 };
@@ -35,6 +37,9 @@ export default class Maps extends React.Component {
     this.setState({ text: text });
     let queryResponse = await MapsRequestHandler.handleQuery(49.267940, -123.247360, requestTypes.HOSPITAL);
     console.log("Response: " + queryResponse);
+
+    // This is the response containing the data you want for rendering on the front-end.
+    return queryResponse;
   }
 
   render() {
@@ -65,13 +70,16 @@ export class MapsRequestHandler {
     console.log(queryPath);
 
     let httpClient = new HttpClient();
+    this.response = null;
+    let _this = this;
 
-    httpClient.get("http://localhost:8080/placesRequest", function(request, response) {
+    await httpClient.get("http://localhost:8080/placesRequest", function(response) {
       // I could work with the result html/json here.  I could also just return it
       console.log("Returning result handleQuery()");
-      console.log(response);
-      return response;
+      _this.response = response;
     });
+
+    return _this.response;
   }
 
   /**
