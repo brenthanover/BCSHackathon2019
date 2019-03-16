@@ -1,4 +1,4 @@
-var sampleresponse = {
+var samplePlacesResponse = {
   "data": {
   "html_attributions": [],
       "results": [

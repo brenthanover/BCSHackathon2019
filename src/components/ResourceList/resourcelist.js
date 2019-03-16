@@ -118,6 +118,29 @@ export default class ResourceList extends React.Component {
     return queryResponse;
   }
 
+  /**
+   * Returns distance (in km) between two points represented by lat1,lng1 and lat2,lng2
+   * Implementation from CPSC210 (Paul Carter)
+   * @param lat1
+   * @param lng1
+   * @param lat2
+   * @param lng2
+   * @returns {number}
+   */
+  static distanceBetweenPoints(lat1, lng1, lat2, lng2) {
+    lat1 = lat1 / 180.0 * Math.PI;
+    lat2 = lat2 / 180.0 * Math.PI;
+    const deltaLon = (lng1 - lng2) / 180.0 * Math.PI;
+    const deltaLat = (lat1 - lat2) / 180.0 * Math.PI;
+
+    const a = Math.sin(deltaLat / 2.0) * Math.sin(deltaLat / 2.0)
+      + Math.cos(lat1) * Math.cos(lat2)
+      * Math.sin(deltaLon / 2.0) * Math.sin(deltaLon / 2.0);
+    const c = 2.0 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+    return c * RADIUS_OF_EARTH;
+  }
+
   componentDidMount() {
     console.log('mounted');
     this.getLocation()
