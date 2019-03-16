@@ -31,6 +31,8 @@ const requestTypes = {
   HOSPITAL: "hospital"
 };
 
+const relevantPlaceTypes = "(shelter)+OR+(injection)+OR+(pharmacy)+OR+(hospital)+OR+(financial)+OR+(legal)+OR+(food)+OR+(addiction)+OR+(recovery)+OR+(survivor)+OR+(healing)+OR+(health)";
+const RADIUS_OF_EARTH = 6371000;   // radius of earth in metres
 
 const MOCK_INFOTAG = { type: 'VACANCY', label: 'VACANT', value: '132/200' };
 
