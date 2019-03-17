@@ -5,7 +5,10 @@ import { NavBar, ResourceList } from '../components';
 const styles = {
   container: {
     display: 'flex',
-    flexFlow: 'column'
+    flex: 'none',
+    flexFlow: 'column',
+    height: '100%',
+    width: '100%'
   }
 };
 

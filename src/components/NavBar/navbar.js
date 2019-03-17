@@ -6,6 +6,7 @@ import Home from '../../assets/home_white.svg';
 const styles = {
   container: {
     display: 'flex',
+    flex: 'none',
     width: '100%',
     height: 'min-content',
     backgroundColor: '#428ec1',

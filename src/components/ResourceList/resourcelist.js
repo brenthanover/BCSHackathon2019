@@ -1,6 +1,7 @@
 import './resourcelist.css';
 import React from 'react';
 import { List } from 'semantic-ui-react';
+import Lottie from 'react-lottie';
 import ResourceListItem from './resourcelistitem';
 import {MapsRequestHandler} from '../Maps/maps';
 import history from "../../history";
@@ -9,7 +10,7 @@ const styles = {
   container: {
     display: 'flex',
     flexFlow: 'column',
-    flex: 'none',
+    flex: 1,
     width: '100%',
     height: '100%'
   },
@@ -22,10 +23,20 @@ const styles = {
   listItem: {
     padding: 0
     // borderBottom: '1px solid #c1c1c1'
+  },
+  loading: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '100%',
+    height: '100%',
+    padding: '1rem',
+    paddingTop: '2rem'
   }
 };
 
 const MAX_ITEMS = 6;
+const LOADING_DELAY = 2500;
 
 const requestTypes = {
   SHELTER: "shelter",
@@ -58,6 +69,23 @@ const MOCK_ITEMS = [
   }
 ];
 
+const defaultOptions = {
+  loop: true,
+  autoplay: true,
+  animationData: require('./loading.json'),
+  rendererSettings: {
+    preserveAspectRatio: 'xMidYMid slice'
+  }
+};
+
+const Loading = () => (
+  <div style={styles.loading}>
+    <Lottie options={defaultOptions}
+            height="100%"
+            width="100%"/>
+  </div>
+);
+
 export default class ResourceList extends React.Component {
   constructor(props) {
     super(props);
@@ -65,7 +93,8 @@ export default class ResourceList extends React.Component {
     this.state = {
       lat: 49.267940,
       lon: -123.247360,
-      data: []
+      data: [],
+      isLoading: false
     };
 
     this.queryNearbyResources = this.queryNearbyResources.bind(this);
@@ -100,7 +129,12 @@ export default class ResourceList extends React.Component {
     // TODO: here, we should call handleGetPlacesQuery() with a proper lat, lng, and request type.
     let queryResponse = await MapsRequestHandler.handleGetPlacesQuery(this.state.lat, this.state.lon);
     console.log('resources are ', queryResponse);
-    this.setState({ data: this.formatData(JSON.parse(queryResponse).data) });
+
+    this.setState({ data: this.formatData(JSON.parse(queryResponse).data)});
+
+    window.setTimeout(() => {
+      this.setState({ isLoading: false })
+    }, LOADING_DELAY);
     return this.formatData(JSON.parse(queryResponse).data);
   }
 
@@ -157,7 +191,7 @@ export default class ResourceList extends React.Component {
   }
 
   componentDidMount() {
-    console.log('mounted');
+    this.setState({ isLoading: true });
     this.getLocation()
       .then(this.setLocation)
       .then(this.queryNearbyResources);
@@ -190,6 +224,8 @@ export default class ResourceList extends React.Component {
     return (
       <div style={styles.container}>
         <div style={styles.scrollContainer}>
+        { this.state.isLoading && <Loading /> }
+        { !this.state.isLoading && <div style={styles.scrollContainer}>
           <button style={{ height: '2rem' }} onClick={() => this.changeLocation()}>Toggle location</button>
           <List celled>
             {this.state.data.slice(0, MAX_ITEMS).map((item, id) => (
@@ -210,7 +246,8 @@ export default class ResourceList extends React.Component {
               </List.Item>
             ))}
           </List>
-        </div>
+        </div>}
+      </div>
       </div>
     )
   }
