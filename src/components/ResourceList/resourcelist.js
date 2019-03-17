@@ -19,13 +19,13 @@ const styles = {
     border: '1px solid magenta'
   }
 };
-
-const MOCK_INFOTAG = { type: 'VACANCY', label: 'VACANT', value: '132/200' };
-const MOCK_DATA = [
-  { title: 'TEST1', description: 'test1', infoTag: MOCK_INFOTAG },
-  { title: 'TEST2', description: 'test2', infoTag: MOCK_INFOTAG },
-  { title: 'TEST3', description: 'test3', infoTag: MOCK_INFOTAG }
-];
+//
+// const MOCK_INFOTAG = { type: 'VACANCY', label: 'VACANT', value: '132/200' };
+// const MOCK_DATA = [
+//   { title: 'TEST1', description: 'test1', infoTag: MOCK_INFOTAG },
+//   { title: 'TEST2', description: 'test2', infoTag: MOCK_INFOTAG },
+//   { title: 'TEST3', description: 'test3', infoTag: MOCK_INFOTAG }
+// ];
 
 
 export default class Navbar extends React.Component {
@@ -43,7 +43,6 @@ export default class Navbar extends React.Component {
 
     this.handleClick = this.handleClick.bind(this);
     this.getResources = this.getResources.bind(this);
-    this.getLocation = this.getLocation.bind(this);
 
     this.db = firebase.database();
 
@@ -60,17 +59,13 @@ export default class Navbar extends React.Component {
             description: "This is a Shelter",
             infoTag: {
               type: "VACANCY",
-              label: (resource.capacity >= resource.occupants),
+              label: (resource.capacity > resource.occupants) ? "VACANT" : "FULL",
               value: `${resource.occupants}/${resource.capacity}`
             }
           }
       })
       this.setState({resources: shelters});
     }.bind(this));
-  }
-
-  getLocation() {
-      return;
   }
 
   handleClick(text) {
