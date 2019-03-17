@@ -1,6 +1,7 @@
 import React from 'react';
 import ResourceListItemDetails from './resourcelistitemdetails';
 import Chip from './chip';
+import Lottie from 'react-lottie';
 import {MapsRequestHandler} from '../Maps/maps';
 
 const LIST_BLUE = '#eceef9';
@@ -84,6 +85,22 @@ const MOCK_ITEM_DETAILS = {
   website: "http://pharmsci.ubc.ca/pharmacists-clinic",
 };
 
+const defaultOptions = {
+  loop: true,
+  autoplay: true,
+  animationData: require('./loading_2.json'),
+  rendererSettings: {
+    preserveAspectRatio: 'xMidYMid slice'
+  }
+};
+
+const Loading = () => (
+  <div style={styles.loading}>
+    <Lottie options={defaultOptions}
+            height="100%"
+            width="100%"/>
+  </div>
+);
 
 export default class ResourceListItem extends React.Component {
   constructor(props) {
@@ -115,8 +132,7 @@ export default class ResourceListItem extends React.Component {
     const { place_id } = this.props;
     let queryResponse = await MapsRequestHandler.handleGetPlaceDetails(place_id);
     console.log("Response: " + queryResponse);
-    this.setState({ data: this.formatData(JSON.parse(queryResponse).data) });
-    this.setState({ isExpanded: !isExpanded });
+    this.setState({ data: this.formatData(JSON.parse(queryResponse).data), isExpanded: !isExpanded });
     return queryResponse;
   }
 
@@ -138,10 +154,7 @@ export default class ResourceListItem extends React.Component {
   }
 
   handleExpand(isExpanded) {
-    // TODO: add api call for details here and set state
     this.handleIndividualPlaceClick(isExpanded);
-      // .then(() => this.setState({ isExpanded: !isExpanded }))
-      // .catch(() => this.setState({ isExpanded: false }));
   }
 
   getLabel() {
