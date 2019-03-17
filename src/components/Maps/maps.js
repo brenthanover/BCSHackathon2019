@@ -1,7 +1,7 @@
 import React from 'react';
 
-// const ROOT_URL = "http://localhost:8080";
-const ROOT_URL = "";
+export const ROOT_URL = "http://localhost:8080";
+// export const ROOT_URL = "";
 const port = process.env.PORT || 8080;
 console.log('debug: ', port);
 
@@ -20,7 +20,7 @@ const requestTypes = {
 const relevantPlaceTypes = "(shelter)+OR+(injection)+OR+(pharmacy)+OR+(hospital)+OR+(financial)+OR+(legal)+OR+(food)+OR+(addiction)+OR+(recovery)+OR+(survivor)+OR+(healing)+OR+(health)";
 const RADIUS_OF_EARTH = 6371000;   // radius of earth in metres
 
-let HttpClient = function() {
+export let HttpClient = function() {
   this.post = function(aUrl, queryPath, aCallback) {
     let anHttpRequest = new XMLHttpRequest();
     anHttpRequest.onreadystatechange = function() {
@@ -36,6 +36,7 @@ let HttpClient = function() {
     anHttpRequest.send( JSON.stringify(data));
   }
 };
+
 
 export default class Maps extends React.Component {
   constructor(props) {
