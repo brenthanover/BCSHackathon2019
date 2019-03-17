@@ -3,6 +3,7 @@ import React from 'react';
 import { List } from 'semantic-ui-react';
 import ResourceListItem from './resourcelistitem';
 import {MapsRequestHandler} from '../Maps/maps';
+import history from "../../history";
 
 const styles = {
   container: {
@@ -162,10 +163,34 @@ export default class ResourceList extends React.Component {
       .then(this.queryNearbyResources);
   }
 
+  changeLocation() {
+    console.log("Changing location...");
+
+    let position;
+    if (this.state.lat === 49.281388) {
+      position = {
+        coords: {
+          latitude: 49.267940,
+          longitude: -123.247360,
+        }
+      }
+    } else {
+      position = {
+        coords: {
+          latitude: 49.281388,
+          longitude: -123.095661,
+        }
+      };
+    }
+    this.setLocation(position);
+    this.queryNearbyResources();
+  }
+
   render() {
     return (
       <div style={styles.container}>
         <div style={styles.scrollContainer}>
+          <button style={{ height: '2rem' }} onClick={() => this.changeLocation()}>Toggle location</button>
           <List celled>
             {this.state.data.slice(0, MAX_ITEMS).map((item, id) => (
               <List.Item key={id} style={styles.listItem}>
