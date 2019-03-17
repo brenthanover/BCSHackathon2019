@@ -43,9 +43,10 @@ app.post('/placesRequest', function (req, res) {
 });
 
 app.post('/twilio', function (req, res) {
-  client.messages
+/*  client.messages
     .create({from: '+12049005587', body: 'A free bed is now available at your shelter. Please arrive in 30 minutes.', to: '+16042504909'})
     .then(message => console.log(message.sid));
+  console.log('here backend');*/
 });
 
 app.post('/placeDetailsRequest', function (req, res) {

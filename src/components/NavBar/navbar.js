@@ -2,7 +2,6 @@ import './navbar.css';
 import React from 'react';
 import history from '../../history';
 import Home from '../../assets/home_white.svg';
-import { ROOT_URL, HttpClient } from '../Maps/maps';
 
 const styles = {
   container: {
@@ -26,6 +25,15 @@ const styles = {
     path: {
       fill: '#FFF'
     }
+  },
+  button: {
+    padding: '1px 32px',
+    height: '2rem',
+    backgroundColor: '#428ec1',
+    border: '1px solid white',
+    color: 'white',
+    textAlign: 'center',
+    marginLeft: '6px',
   }
 };
 
@@ -41,10 +49,10 @@ export default class Navbar extends React.Component {
   }
 
   async handleClick() {
-    let httpClient = new HttpClient();
-    this.response = null;
-
-    await httpClient.post(`${ROOT_URL}/twilio`);
+    // let httpClient = new HttpClient();
+    // this.response = null;
+    //
+    // await httpClient.post(`${ROOT_URL}/twilio`);
   }
 
   render() {
@@ -52,9 +60,9 @@ export default class Navbar extends React.Component {
       <div style={styles.container}>
         <img style={styles.logo} src={Home} alt="logo" className="home-logo" />
         <h1 style={styles.title}>Haven App</h1>
-        <button style={{ height: '2rem' }} onClick={this.handleClick}>main</button>
-        <button style={{ height: '2rem' }} onClick={() => history.push('/')}>main</button>
-        <button style={{ height: '2rem' }} onClick={() => history.push('/admin')}>admin</button>
+
+        <button style={styles.button} onClick={() => history.push('/')}>main</button>
+        <button style={styles.button} onClick={() => history.push('/admin')}>admin</button>
       </div>
     )
   }
