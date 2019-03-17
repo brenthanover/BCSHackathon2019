@@ -32,6 +32,14 @@ const styles = {
     height: '100%',
     padding: '1rem',
     paddingTop: '2rem'
+  },
+  button: {
+    padding: '1px 32px',
+    height: '2rem',
+    backgroundColor: '#428ec1',
+    border: '1px solid white',
+    color: 'white',
+    textAlign: 'center',
   }
 };
 
@@ -226,7 +234,7 @@ export default class ResourceList extends React.Component {
         <div style={styles.scrollContainer}>
         { this.state.isLoading && <Loading /> }
         { !this.state.isLoading && <div style={styles.scrollContainer}>
-          <button style={{ height: '2rem' }} onClick={() => this.changeLocation()}>Toggle location</button>
+          <button style={styles.button} onClick={() => this.changeLocation()}>Toggle location</button>
           <List celled>
             {this.state.data.slice(0, MAX_ITEMS).map((item, id) => (
               <List.Item key={id} style={styles.listItem}>

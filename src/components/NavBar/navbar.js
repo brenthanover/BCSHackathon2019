@@ -25,6 +25,15 @@ const styles = {
     path: {
       fill: '#FFF'
     }
+  },
+  button: {
+    padding: '1px 32px',
+    height: '2rem',
+    backgroundColor: '#428ec1',
+    border: '1px solid white',
+    color: 'white',
+    textAlign: 'center',
+    marginLeft: '6px',
   }
 };
 
@@ -48,8 +57,8 @@ export default class Navbar extends React.Component {
       <div style={styles.container}>
         <img style={styles.logo} src={Home} alt="logo" className="home-logo" />
         <h1 style={styles.title}>Haven App</h1>
-        <button style={{ height: '2rem' }} onClick={() => history.push('/')}>main</button>
-        <button style={{ height: '2rem' }} onClick={() => history.push('/admin')}>admin</button>
+        <button style={styles.button} onClick={() => history.push('/')}>main</button>
+        <button style={styles.button} onClick={() => history.push('/admin')}>admin</button>
       </div>
     )
   }

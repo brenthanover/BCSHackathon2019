@@ -6,7 +6,7 @@ const styles = {
     flex: 'none',
     height: 'min-content',
     width: '100%',
-    backgroundColor: '#FFFFFF',
+    //backgroundColor: '#FFFFFF',
     padding: '0.5rem'
   },
   innerContainer: {
