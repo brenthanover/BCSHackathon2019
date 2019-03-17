@@ -45,7 +45,8 @@ export default class ResourceListItemDetails extends React.Component {
           <h1>Resource Details/ schedule</h1>
           <p>{phone}</p>
           <p>{website}</p>
-          <p>{schedule}</p>
+          {schedule.map(item => <p>{item}</p>)}
+          {/*<p>{schedule}</p>*/}
 
           <div style={styles.optionsBar}>
             <button onClick={() => this.handleClick('You clicked the button!')}>Admin Panel!</button>
