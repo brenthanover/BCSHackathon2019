@@ -1,8 +1,7 @@
 import React from 'react';
 import Navbar from '../components/NavBar/navbar';
+import firebase from "../Firebase";
 
-const firebase = require('firebase/app');
-require('firebase/database');
 const styles = {
     container: {
         display: 'flex',
@@ -23,16 +22,6 @@ export default class Admin extends React.Component {
 
         this.handleClick = this.handleClick.bind(this);
 
-        const config = {
-            apiKey: "AIzaSyCNmaSPCktKr5T-Stq6mL3wlnIuJ9xD-Ss",
-            authDomain: "bcs-hackathon-2019.firebaseapp.com",
-            databaseURL: "https://bcs-hackathon-2019.firebaseio.com",
-            projectId: "bcs-hackathon-2019",
-            storageBucket: "bcs-hackathon-2019.appspot.com",
-            messagingSenderId: "473934570743"
-        };
-        firebase.initializeApp(config);
-        this.firebase = firebase;
         this.db = firebase.database();
         this.setName();
         this.setCapacity();
@@ -40,14 +29,14 @@ export default class Admin extends React.Component {
     }
 
     setCapacity() {
-      this.firebase.database().ref(`/Shelters/Shelter1`).once('value').then((res) => {
+      this.db.ref(`/Shelters/Shelter1`).once('value').then((res) => {
           let capacity = res.val().capacity;
           this.setState({capacity});
       });
     }
 
     setOccupants() {
-      this.firebase.database().ref(`/Shelters/Shelter1`).once('value').then((res) => {
+      this.db.ref(`/Shelters/Shelter1`).once('value').then((res) => {
           let occupants = res.val().occupants;
           this.setState({occupants});
       });
