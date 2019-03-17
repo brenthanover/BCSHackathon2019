@@ -17,6 +17,7 @@ const styles = {
   },
   scrollContainer: {
     display: 'flex',
+    flex:'none',
     flexFlow: 'column',
     width: '100%',
     height: 'min-content'
@@ -131,8 +132,8 @@ export default class ResourceList extends React.Component {
         reject("Geolocation is not supported by this browser.");
       }
     })
-      
-    
+
+
   }
 
   getResources() {
@@ -258,7 +259,6 @@ export default class ResourceList extends React.Component {
   render() {
     return (
       <div style={styles.container}>
-        <div style={styles.scrollContainer}>
         { this.state.isLoading && <Loading /> }
         { !this.state.isLoading && <div style={styles.scrollContainer}>
           <button style={styles.button} onClick={() => this.changeLocation()}>Toggle location</button>
@@ -282,7 +282,6 @@ export default class ResourceList extends React.Component {
             ))}
           </List>
         </div>}
-      </div>
       </div>
     )
   }
