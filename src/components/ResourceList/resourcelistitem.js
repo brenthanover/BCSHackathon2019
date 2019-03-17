@@ -21,7 +21,8 @@ const styles = {
   thumbnail: {
     width: '8rem',
     height: '100%',
-    backgroundColor: '#c1c1c1'
+    paddingTop: '1rem',
+    textAlign: 'center',
   },
 
   innerContainer: {
@@ -54,6 +55,10 @@ const styles = {
     marginBottom: 4,
   },
 
+  distance: {
+    fontSize: '10pt',
+    fontStyle: 'italic',
+  },
   bodyControlBar: {
     display: 'flex',
     height: '1rem',
@@ -173,14 +178,16 @@ export default class ResourceListItem extends React.Component {
       address,
       openingHours,
       types,
-      infoTag
+      infoTag,
+      distanceTo
     }  = this.props;
 
     return (
       <div style={styles.container(index % 2, this.state.isExpanded)} onClick={() => this.handleExpand(this.state.isExpanded)}>
         <div style={styles.innerContainer}>
           <div style={styles.thumbnail}>
-            logo goes here
+            <img src={icon} alt={"icon"}/>
+            <p style={styles.distance}>{distanceTo.toFixed(2)} km</p>
           </div>
           <div style={styles.body}>
             <h3 style={styles.title}>{name}</h3>

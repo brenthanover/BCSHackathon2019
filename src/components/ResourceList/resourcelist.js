@@ -154,10 +154,15 @@ export default class ResourceList extends React.Component {
         opening_hours: result.opening_hours,
         types: result.types,
         place_id: result.place_id,
-        infoTag: MOCK_INFOTAG
+        distanceTo: ResourceList.distanceBetweenPoints(result.geometry.location.lat, result.geometry.location.lng, this.state.lat, this.state.lon),
+        infoTag: MOCK_INFOTAG,
       };
       ret.push(resultObj);
     }
+
+    ret.sort(function(a, b) {
+      return a.distanceTo - b.distanceTo;
+    });
     return ret;
   }
 
@@ -181,7 +186,7 @@ export default class ResourceList extends React.Component {
       * Math.sin(deltaLon / 2.0) * Math.sin(deltaLon / 2.0);
     const c = 2.0 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
-    return c * RADIUS_OF_EARTH;
+    return c * RADIUS_OF_EARTH / 1000; // in km
   }
 
   componentDidMount() {
@@ -209,6 +214,7 @@ export default class ResourceList extends React.Component {
                     types={item.types}
                     place_id={item.place_id}
                     infoTag={item.infoTag}
+                    distanceTo={item.distanceTo}
                   />
                 </List.Content>
               </List.Item>
