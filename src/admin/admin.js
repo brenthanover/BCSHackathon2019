@@ -25,8 +25,6 @@ export default class Admin extends React.Component {
         this.setOccupants = this.setOccupants.bind(this);
         this.setName = this.setName.bind(this);
         this.decCount = this.decCount.bind(this);
-        this.decCount = this.decCount.bind(this);
-        this.decCount = this.decCount.bind(this);
         this.incCount = this.incCount.bind(this);
         this.handleClick = this.handleClick.bind(this);
         this.handleSendTwilio = this.handleSendTwilio.bind(this);

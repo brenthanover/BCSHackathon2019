@@ -1,7 +1,7 @@
 import React from 'react';
 
-export const ROOT_URL = "http://localhost:8080";
-// export const ROOT_URL = "";
+// export const ROOT_URL = "http://localhost:8080";
+export const ROOT_URL = "";
 const port = process.env.PORT || 8080;
 console.log('debug: ', port);
 
