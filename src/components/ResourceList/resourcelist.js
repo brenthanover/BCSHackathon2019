@@ -102,7 +102,6 @@ export default class ResourceList extends React.Component {
     this.setLocation = this.setLocation.bind(this);
     this.getLocation = this.getLocation.bind(this);
     this.formatData = this.formatData.bind(this);
-    this.handleClick = this.handleClick.bind(this);
     this.getResources = this.getResources.bind(this);
 
     this.db = firebase.database();
