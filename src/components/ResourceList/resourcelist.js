@@ -1,5 +1,7 @@
 import React from 'react';
 import ResourceListItem from './resourcelistitem';
+const firebase = require('firebase/app');
+require('firebase/database');
 
 const styles = {
   container: {
@@ -32,10 +34,54 @@ export default class Navbar extends React.Component {
     super(props);
 
     this.state = {
-      text: 'Go click the button!'
+      text: 'Go click the button!',
+      location: {
+        lat: 0,
+        long:0,
+      },
+      resources: [],
     };
 
     this.handleClick = this.handleClick.bind(this);
+    this.getResources = this.getResources.bind(this);
+    this.getLocation = this.getLocation.bind(this);
+
+    const config = {
+      apiKey: "AIzaSyCNmaSPCktKr5T-Stq6mL3wlnIuJ9xD-Ss",
+      authDomain: "bcs-hackathon-2019.firebaseapp.com",
+      databaseURL: "https://bcs-hackathon-2019.firebaseio.com",
+      projectId: "bcs-hackathon-2019",
+      storageBucket: "bcs-hackathon-2019.appspot.com",
+      messagingSenderId: "473934570743"
+    };
+    firebase.initializeApp(config);
+    this.firebase = firebase;
+    this.db = firebase.database();
+
+    this.getResources();
+  }
+
+  getResources() {
+    let resourceType = "Shelters";
+    this.db.ref(`/${resourceType}`).orderByKey().on("value", function (snapshot){
+      let resources = Object.values(snapshot.val());
+      let shelters = resources.map((resource) => {
+          return {
+            title: resource.name,
+            description: "This is a Shelter",
+            infoTag: {
+              type: "VACANCY",
+              label: (resource.capacity >= resource.occupants),
+              value: `${resource.occupants}/${resource.capacity}`
+            }
+          }
+      })
+      this.setState({resources: shelters});
+    }.bind(this));
+  }
+
+  getLocation() {
+      return;
   }
 
   handleClick(text) {
@@ -46,7 +92,7 @@ export default class Navbar extends React.Component {
     return (
       <div style={styles.container}>
         <div style={styles.scrollContainer}>
-          {MOCK_DATA.map((item, id) => (
+          {this.state.resources.map((item, id) => (
             <ResourceListItem
               key={id}
               title={item.title}

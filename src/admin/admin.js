@@ -15,7 +15,6 @@ const styles = {
 export default class Admin extends React.Component {
     constructor(props) {
         super(props);
-
         this.state = {
             name: "asdf",
             occupants: 0,
@@ -55,7 +54,7 @@ export default class Admin extends React.Component {
     }
 
     setName() {
-        this.firebase.database().ref(`/Shelters/Shelter1`).once('value').then((res) => {
+        this.db.ref(`/Shelters/Shelter1`).once('value').then((res) => {
             let name = res.val().name;
             this.setState({name});
         });
